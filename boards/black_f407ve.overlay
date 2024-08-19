@@ -1,0 +1,26 @@
+/ {
+	svpwm {
+		compatible = "pwm-leds";//compatible is necessay.
+		
+		u_svpwm_out:u_svpwm_out{
+			pwms = <&pwm4 1 66667 PWM_POLARITY_NORMAL>;
+		};
+		v_svpwm_out:v_svpwm_out{
+			pwms = <&pwm4 2 66667 PWM_POLARITY_NORMAL>;
+		};
+		w_svpwm_out:w_svpwm_out{
+			pwms = <&pwm4 3 66667 PWM_POLARITY_NORMAL>;
+		};
+	};
+	
+};
+
+&timers4 {
+	status = "okay";
+	pwm4:pwm {
+		status = "okay";
+		//Pin configuration/s for the first state
+		pinctrl-0 = <&tim4_ch1_pd12 &tim4_ch2_pd13 &tim4_ch3_pd14>;
+		pinctrl-names = "default";
+	};
+};
