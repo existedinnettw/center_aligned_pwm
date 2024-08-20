@@ -3,16 +3,32 @@
 		compatible = "pwm-leds";//compatible is necessay.
 		
 		u_svpwm_out:u_svpwm_out{
-			pwms = <&pwm4 1 66667 PWM_POLARITY_NORMAL>;
+			pwms = <&pwm4 1 33333 PWM_POLARITY_NORMAL>;
 		};
 		v_svpwm_out:v_svpwm_out{
-			pwms = <&pwm4 2 66667 PWM_POLARITY_NORMAL>;
+			pwms = <&pwm4 2 33333 PWM_POLARITY_NORMAL>;
 		};
 		w_svpwm_out:w_svpwm_out{
-			pwms = <&pwm4 3 66667 PWM_POLARITY_NORMAL>;
+			pwms = <&pwm4 3 33333 PWM_POLARITY_NORMAL>;
 		};
 	};
 	
+};
+
+&tim4_ch1_pd12 {
+	slew-rate = "very-high-speed";
+	bias-disable;
+	drive-push-pull;
+};
+&tim4_ch2_pd13 {
+	slew-rate = "very-high-speed";
+	bias-disable;
+	drive-push-pull;
+};
+&tim4_ch3_pd14 {
+	slew-rate = "very-high-speed";
+	bias-disable;
+	drive-push-pull;
 };
 
 &timers4 {
