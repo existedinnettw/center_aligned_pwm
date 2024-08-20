@@ -8,10 +8,13 @@
  * @file Sample app to demonstrate PWM-based RGB LED control
  */
 
+#define _DEFAULT_SOURCE
+
 #include <zephyr/kernel.h>
 #include <zephyr/sys/printk.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/pwm.h>
+#include <math.h>
 
 #include <stm32_ll_tim.h>
 
@@ -19,7 +22,20 @@ static const struct pwm_dt_spec u_svpwm_out = PWM_DT_SPEC_GET(DT_NODELABEL(u_svp
 static const struct pwm_dt_spec v_svpwm_out = PWM_DT_SPEC_GET(DT_NODELABEL(v_svpwm_out));
 static const struct pwm_dt_spec w_svpwm_out = PWM_DT_SPEC_GET(DT_NODELABEL(w_svpwm_out));
 
-#define STEP_SIZE PWM_USEC(2000)
+#define TIMER_PERIOD K_USEC(50)
+
+float cur_time = 0;
+
+void my_timer_handler(struct k_timer *dummy)
+{
+	// dummy->period
+	// A*sin(wt), w=2*pi*f
+	cur_time += 50e-6f;
+	uint32_t pulse = (uint32_t)(fabs(33333 * sinf(2.0f * (float)M_PI * 1.0f * cur_time)));
+	pwm_set_pulse_dt(&u_svpwm_out, pulse);
+}
+
+K_TIMER_DEFINE(my_timer, my_timer_handler, NULL);
 
 int main(void)
 {
@@ -52,6 +68,8 @@ int main(void)
 		printk("Error: Failed to set PWM pulse width. Error code: %d\n", ret);
 		return 1;
 	}
+
+	k_timer_start(&my_timer, TIMER_PERIOD, TIMER_PERIOD);
 
 	while (1)
 	{
